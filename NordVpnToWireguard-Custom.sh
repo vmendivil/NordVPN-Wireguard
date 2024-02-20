@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Extract WireGuard connection data
+#     https://forum.opnsense.org/index.php?topic=21350.0
+# Whitelist subnet to keep connection to ssh after connecting to NordVpn
+#     https://www.reddit.com/r/nordvpn/comments/oqykxp/nordvpn_connect_cuts_off_raspberry_pi_from_network/
+
 COUNTRY=""
 CITY=""
 VERSION="0.1.0"
@@ -79,6 +84,8 @@ fi
 # Preparing the Interface section
 echo "[Interface]" > Nordvpn.conf
 privateKey=`sudo wg show nordlynx private-key`
+interfacePublicKey=`sudo wg show nordlynx public-key` # Custom
+echo "InterfacePublicKey = $interfacePublicKey" >> Nordvpn.conf
 echo "PrivateKey = $privateKey" >> Nordvpn.conf
 echo "ListenPort = 51820" >> Nordvpn.conf
 localAddress=`ifconfig nordlynx | grep inet |  awk -v OFS='\n' '{ print $2 }'`

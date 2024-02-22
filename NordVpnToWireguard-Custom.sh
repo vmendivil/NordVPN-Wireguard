@@ -83,12 +83,14 @@ fi
 
 # Preparing the Interface section
 echo "[Interface]" > Nordvpn.conf
+
 privateKey=`sudo wg show nordlynx private-key`
 interfacePublicKey=`sudo wg show nordlynx public-key` # Custom
-echo "InterfacePublicKey = $interfacePublicKey" >> Nordvpn.conf
+localAddress=`ifconfig nordlynx | grep inet |  awk -v OFS='\n' '{ print $2 }'`
+
+echo "PublicKey = $interfacePublicKey" >> Nordvpn.conf
 echo "PrivateKey = $privateKey" >> Nordvpn.conf
 echo "ListenPort = 51820" >> Nordvpn.conf
-localAddress=`ifconfig nordlynx | grep inet |  awk -v OFS='\n' '{ print $2 }'`
 echo "Address = $localAddress/32" >> Nordvpn.conf
 echo "DNS = 103.86.96.100, 103.86.99.100" >> Nordvpn.conf
 echo "" >> Nordvpn.conf
@@ -101,6 +103,7 @@ nordvpn d > /dev/null 2>&1
 
 # Preparing the Peer section 
 endpoint=`grep -m 1 -o '.*' Peer.txt | tail -n 1`
+station=`grep -m 2 -o '.*' Peer.txt | tail -n 1`
 publicKey=`grep -m 5 -o '.*' Peer.txt | tail -n 1`
 
 rm Peer.txt
@@ -109,7 +112,9 @@ echo "[Peer]" >> Nordvpn.conf
 echo "PublicKey = $publicKey" >> Nordvpn.conf
 echo "AllowedIPs = 0.0.0.0/0" >> Nordvpn.conf
 echo "Endpoint = $endpoint:51820" >> Nordvpn.conf
+echo "Endpoint IP = $station" >> Nordvpn.conf
 echo "PersistentKeepalive = 25" >> Nordvpn.conf
+
 
 # Renaming config file to show the endpoint country id and server number
 outputFileName=`echo $endpoint |  grep -o '^[^.]*'`

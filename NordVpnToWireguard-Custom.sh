@@ -104,6 +104,8 @@ nordvpn d > /dev/null 2>&1
 # Preparing the Peer section 
 endpoint=`grep -m 1 -o '.*' Peer.txt | tail -n 1`
 station=`grep -m 2 -o '.*' Peer.txt | tail -n 1`
+city=`grep -m 3 -o '.*' Peer.txt | tail -n 1`
+country=`grep -m 4 -o '.*' Peer.txt | tail -n 1`
 publicKey=`grep -m 5 -o '.*' Peer.txt | tail -n 1`
 
 rm Peer.txt
@@ -111,9 +113,11 @@ rm Peer.txt
 echo "[Peer]" >> Nordvpn.conf
 echo "PublicKey = $publicKey" >> Nordvpn.conf
 echo "AllowedIPs = 0.0.0.0/0" >> Nordvpn.conf
-echo "Endpoint = $endpoint:51820" >> Nordvpn.conf
-echo "Endpoint IP = $station" >> Nordvpn.conf
 echo "PersistentKeepalive = 25" >> Nordvpn.conf
+echo "Endpoint = $endpoint:51820" >> Nordvpn.conf
+echo "EndpointIP = $station" >> Nordvpn.conf
+echo "Country = $country" >> Nordvpn.conf
+echo "City = $city" >> Nordvpn.conf
 
 
 # Renaming config file to show the endpoint country id and server number

@@ -1,6 +1,10 @@
 https://www.reddit.com/r/OPNsenseFirewall/comments/17jpn80/nordvpn_wireguard_nordlynx/
 https://docs.opnsense.org/manual/how-tos/wireguard-selective-routing.html
 
+# Find Servers
+https://nordvpn.com/servers/tools/
+https://support.nordvpn.com/hc/en-us/articles/19685373730193-How-to-choose-the-best-NordVPN-server-in-USA#:~:text=Cities%3A,Louis.
+
 
 Interface
     * MTU = 1420

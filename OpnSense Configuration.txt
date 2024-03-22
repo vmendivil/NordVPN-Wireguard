@@ -1,0 +1,11 @@
+https://www.reddit.com/r/OPNsenseFirewall/comments/17jpn80/nordvpn_wireguard_nordlynx/
+https://docs.opnsense.org/manual/how-tos/wireguard-selective-routing.html
+
+
+Interface
+    * MTU = 1420
+    * MSS = 1420
+
+Gateway
+    * IP Address: x.x.x.1
+    * Monitor IP: Same ip address as the "Peer >> EndpointIP"

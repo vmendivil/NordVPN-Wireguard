@@ -87,11 +87,13 @@ echo "[Interface]" > Nordvpn.conf
 privateKey=`sudo wg show nordlynx private-key`
 interfacePublicKey=`sudo wg show nordlynx public-key` # Custom
 localAddress=`ifconfig nordlynx | grep inet |  awk -v OFS='\n' '{ print $2 }'`
+gateway=$(ifconfig nordlynx | grep -oP 'inet\s+\K(\d+\.){3}\d+' | awk 'NR==1{print $1}')
 
 echo "PublicKey = $interfacePublicKey" >> Nordvpn.conf
 echo "PrivateKey = $privateKey" >> Nordvpn.conf
 echo "ListenPort = 51820" >> Nordvpn.conf
 echo "Address = $localAddress/32" >> Nordvpn.conf
+echo "Gateway = $gateway/32" >> Nordvpn.conf
 echo "DNS = 103.86.96.100, 103.86.99.100" >> Nordvpn.conf
 echo "" >> Nordvpn.conf
 

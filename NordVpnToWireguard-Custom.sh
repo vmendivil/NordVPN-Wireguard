@@ -5,6 +5,9 @@
 # Whitelist subnet to keep connection to ssh after connecting to NordVpn
 #     https://www.reddit.com/r/nordvpn/comments/oqykxp/nordvpn_connect_cuts_off_raspberry_pi_from_network/
 
+# Examples:
+# ./NordVpnToWireguard-v1.sh -c "US" -s Atlanta
+
 COUNTRY=""
 CITY=""
 VERSION="0.1.0"
@@ -34,8 +37,8 @@ do
          echo "Usage: NordVpnToWireguard [OPTIONS]"
          echo "OPTION includes:"
          echo "   -v | --version  - prints out version information."
-	 echo "   -c | --country  - Country to connect to (ex. Canada). If option is not provided, NordVPN will get a wireguard configuration for the recommended country, unless a valid city name is provided."
-	 echo "   -s | --city - City to connect to (ex. Toronto). When country option is provided, NordVPN will look for the the city within the country and return the fastest server. If no country is provided, NordVPN will look up the fastest server for a city matching the name."
+	       echo "   -c | --country  - Country to connect to (ex. Canada). If option is not provided, NordVPN will get a wireguard configuration for the recommended country, unless a valid city name is provided."
+	       echo "   -s | --city - City to connect to (ex. Toronto). When country option is provided, NordVPN will look for the the city within the country and return the fastest server. If no country is provided, NordVPN will look up the fastest server for a city matching the name."
          echo "   -h | --help     - displays this message."
          exit
       ;;

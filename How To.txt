@@ -1,0 +1,7 @@
+# Extract WireGuard connection data
+#     https://forum.opnsense.org/index.php?topic=21350.0
+# Whitelist subnet to keep connection to ssh after connecting to NordVpn
+#     https://www.reddit.com/r/nordvpn/comments/oqykxp/nordvpn_connect_cuts_off_raspberry_pi_from_network/
+
+Run v1
+

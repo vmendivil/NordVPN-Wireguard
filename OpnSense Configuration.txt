@@ -13,3 +13,7 @@ Interface
 Gateway
     * IP Address: x.x.x.1
     * Monitor IP: Same ip address as the "Peer >> EndpointIP"
+
+Peers:
+    * Update public key
+    * Update server address

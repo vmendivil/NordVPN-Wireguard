@@ -32,23 +32,37 @@ nordvpn connect $ALLOPTIONS  > /dev/null 2>&1 || {
     exit 1
 }
 
-# Use ip or ifconfig to get
-if [ $(command -v ip &> /dev/null) ]; then
+# Use ip or ifconfig to get interface information
+if command -v ip &> /dev/null; then
         IP_ADDR_COMMAND="ip addr show"
+        USE_IP=true
 else
-        IP_ADDR_COMMAND="ifconfig"
+        if command -v ifconfig &> /dev/null; then
+                IP_ADDR_COMMAND="ifconfig"
+                USE_IP=false
+        else
+                echo "Error: Neither 'ip' nor 'ifconfig' command is available. Please install iproute2 or net-tools package."
+                exit 1
+        fi
 fi
 
-# Preparing the I
-
 # Gather all info
-MYIP=$($IP_ADDR_COMMAND nordlynx | grep inet | awk '{print $2}')/32
+if [ "$USE_IP" = true ]; then
+        MYIP=$(ip addr show nordlynx | grep 'inet ' | awk '{print $2}')
+else
+        MYIP=$($IP_ADDR_COMMAND nordlynx | grep inet | awk '{print $2}')/32
+fi
 PRIVATE=$(sudo wg show nordlynx private-key)
 PUBKEY=$(sudo wg show nordlynx | grep peer | awk '{print $2}')
 ENDPOINT=$(nordvpn status | grep 'Hostname' | awk '{print $2}')
 
 interfacePublicKey=`sudo wg show nordlynx public-key` # Custom
-gateway=$(ifconfig nordlynx | grep -oP 'inet\s+\K(\d+\.){3}\d+' | awk 'NR==1{print $1}')
+
+if [ "$USE_IP" = true ]; then
+        gateway=$(ip addr show nordlynx | grep 'inet ' | awk '{print $2}' | cut -d'/' -f1)
+else
+        gateway=$(ifconfig nordlynx | grep -oP 'inet\s+\K(\d+\.){3}\d+' | awk 'NR==1{print $1}')
+fi
 
 # Gathering info for the Peer section
 curl -s "https://api.nordvpn.com/v1/servers/recommendations?&filters\[servers_technologies\]\[identifier\]=wireguard_udp&limit=1"|jq -r '.[]|.hostname, .station, (.locations|.[]|.country|.city.name), (.locations|.[]|.country|.name), (.technologies|.[].metadata|.[].value), .load' >> Peer.txt

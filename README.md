@@ -120,6 +120,50 @@ Command Options includes:
    -h | --help     - displays this message.
 ```
 
+## Generate a configuration file for a NordVPN Dedicated IP
+
+For a [NordVPN Dedicated IP](https://support.nordvpn.com/hc/en-us/articles/19507808024209-Dedicated-NordVPN-IP-addresses), use `NordVpnDedicatedIpToWG.sh` instead.
+
+> **Why a separate script?** The standard script reads the `[Peer]` details from NordVPN's
+> `recommendations` API. That API only returns shared/public servers — it never returns the
+> dedicated-IP server assigned to your account, so using it for a dedicated IP would write the
+> wrong server's IP and public key and the WireGuard handshake would fail. The dedicated-IP
+> script skips the API entirely and reads everything from the live tunnel after connecting:
+> the peer public key from `wg show nordlynx peers`, the endpoint from `wg show nordlynx endpoints`,
+> and the hostname/IP/country/city from `nordvpn status`.
+
+Prerequisite: a Dedicated IP must already be activated/assigned in your Nord Account.
+
+Connect using the dedicated IP group (default):
+
+```bash
+$ ./NordVpnDedicatedIpToWG.sh
+Connecting to NordVPN dedicated IP group to gather connection parameters....
+Wireguard configuration file Connections/20260615-DedicatedIP-United_States-New_York-us4955.conf created successfully!
+WireGuard endpoint: 185.93.0.116:51820  (server us4955.nordvpn.com)
+Dedicated exit IP:  198.51.100.22
+```
+
+Connect to a specific dedicated server (recommended — `--group` only routes you to *a* dedicated
+server in your region, while the hostname pins your exact assigned server). Find your assigned
+server in your Nord Account, then:
+
+```bash
+$ ./NordVpnDedicatedIpToWG.sh us4955
+Connecting to NordVPN dedicated server 'us4955' to gather connection parameters....
+Wireguard configuration file Connections/20260615-DedicatedIP-United_States-New_York-us4955.conf created successfully!
+```
+
+> **Note on the config format.** Like `NordVpnToWireguard-v2.sh`, the generated file is intended for
+> this repo's OPNsense import workflow and carries extra, non-standard keys (`Gateway`, `EndpointIp`,
+> `Country`, `City`, etc.). It is therefore **not** a plain `wg-quick` file — `wg-quick up <file>`
+> would reject those keys. Strip the non-standard keys first if you need a standalone wg-quick config.
+>
+> **Note on the endpoint.** NordLynx uses a double-NAT layer, so the WireGuard `Endpoint` IP can differ
+> from your public dedicated "exit" IP. The script puts the *negotiated* endpoint (what makes the
+> handshake work) in `Endpoint`, and records the dedicated exit IP as a comment at the top of the file
+> for cross-checking against your Nord Account assignment.
+
 ## Use the generated [Wireguard](https://www.wireguard.com) configuration files
 
 Import the file/s with the  [Wireguard](https://www.wireguard.com) client in any platform and activate the `VPN`.

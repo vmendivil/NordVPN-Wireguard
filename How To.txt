@@ -5,3 +5,12 @@
 
 Run v1
 
+# Dedicated IP
+#     Use NordVpnDedicatedIpToWG.sh (NOT v1/v2 — the recommendations API does not
+#     return dedicated-IP servers). It reads peer key + endpoint from the live
+#     tunnel (wg show nordlynx peers / endpoints) instead of the API.
+#       ./NordVpnDedicatedIpToWG.sh            # connects via --group dedicated_ip
+#       ./NordVpnDedicatedIpToWG.sh us4955     # pin your exact assigned server (preferred)
+#     Endpoint = negotiated wg endpoint (double-NAT means it may differ from the
+#     public dedicated exit IP, which is written as a comment in the .conf).
+
